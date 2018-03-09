@@ -1,8 +1,10 @@
 package com.example.maxfeldman.ui_intents_project;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.FileNotFoundException;
@@ -24,10 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView imageView1;
     Bitmap bitmapP1;
-    boolean checkedStat=false;
     final int CAMERA_REQUEST_PRODUCT = 1;
     ArrayList<Product> products;
-    String pStock;
+    String pStock="No";
 
 
 
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+       final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         products = new ArrayList<>();
         final EditText p1NameEt = findViewById(R.id.prod_edit);
         final EditText p1ProvEt = findViewById(R.id.prov_edit);
@@ -80,13 +82,23 @@ public class MainActivity extends AppCompatActivity {
                 String pPrice = p1PriceEt.getText().toString();
 
 
+            if(pName.equalsIgnoreCase("")||pProv.equalsIgnoreCase("")||pPrice.equalsIgnoreCase("")){
 
+                builder.setTitle("Error:").setMessage("One of the fields is missing ,Please enter a value into the empty field")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                MainActivity.super.onPause();
+                            }
 
-                Product product1 = new Product(pName,pProv,pPrice,pStock,bitmapP1);
+                        }).setCancelable(false).show();
+
+            }else {
+                Product product1 = new Product(pName, pProv, pPrice, pStock, bitmapP1);
 
 
                 products.add(product1);
-
+            }
 
              //   Intent intent2 = new Intent(MainActivity.this, Product_stock.class);
              //   intent2.putExtra("products", product1);
@@ -126,17 +138,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button goStockBtn = findViewById(R.id.go_to_stock);
-        goStockBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,Product_stock.class);
-                startActivity(intent);
+            goStockBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-            }
-        });
+                    if(products.size()==0){
+                        builder.setTitle("Stock is empty:").setMessage("No products to show")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        MainActivity.super.onPause();
+                                    }
+
+                                }).setCancelable(false).show();
 
 
-    }
+                    }else
+                        {
+                        Intent intent = new Intent(MainActivity.this, Product_stock.class);
+                        startActivity(intent);
+                    }
+
+                }
+            });
+
+        }
+
 
 
 
