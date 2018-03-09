@@ -18,9 +18,9 @@ import java.util.List;
 
 public class MyCustomListAdapter extends ArrayAdapter<Product> {
 
-    Context myContext;
-    int resource;
-    List<Product> productList;
+   private Context myContext;
+    private int resource;
+    private List<Product> productList;
 
 
     public MyCustomListAdapter(Context myContext, int resource, List<Product> productList){
@@ -45,24 +45,20 @@ public class MyCustomListAdapter extends ArrayAdapter<Product> {
         TextView textView1 = view.findViewById(R.id.text1);
         TextView textView2 = view.findViewById(R.id.text2);
         TextView textView3 = view.findViewById(R.id.text3);
+        TextView textView4 = view.findViewById(R.id.text4);
         ImageView imageView =view.findViewById(R.id.image_view);
 
-        Product product = productList.get(position); // to be able to use the delete button
+        Product product = productList.get(position);
 
-        textView1.setText(product.getProductName());
-        textView2.setText(product.getProviderName());
-        textView3.setText(product.getProductPrice());
+        textView1.setText("Name: "+ product.getProductName());
+        textView2.setText("Provider: "+product.getProviderName());
+        textView3.setText("Price: "+product.getProductPrice());
+        textView4.setText("In Stock:  "+product.getInStock());
         imageView.setImageBitmap(product.getPhoto());
 
 
 
-        view.findViewById(R.id.deleteBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-
-            }
-        });
 
 
     return view;

@@ -3,7 +3,6 @@ package com.example.maxfeldman.ui_intents_project;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -11,14 +10,17 @@ public class Product implements Serializable {
     private String productName;
     private String providerName;
     private String productPrice;
+    private String inStock;
     transient private Bitmap photo;
 
 
-    public Product(String productName, String providerName,String productPrice, Bitmap photo) {
+    public Product(String productName, String providerName,String productPrice,String inStock, Bitmap photo) {
         this.productName = productName;
         this.providerName = providerName;
         this.productPrice = productPrice;
         this.photo = photo;
+        this.inStock=inStock;
+
     }
 
     public String getProductName() {
@@ -54,10 +56,17 @@ public class Product implements Serializable {
         this.photo = photo;
     }
 
+    public String getInStock() {
+        return inStock;
+    }
+
+    public void setInStock(String inStock) {
+        this.inStock = inStock;
+    }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {     // to write an object of this class
 
-        photo.compress(Bitmap.CompressFormat.JPEG,200,out);
+        photo.compress(Bitmap.CompressFormat.JPEG,50,out);
         out.defaultWriteObject();
     }
 

@@ -7,8 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,7 +24,12 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView imageView1;
     Bitmap bitmapP1;
+    boolean checkedStat=false;
     final int CAMERA_REQUEST_PRODUCT = 1;
+    ArrayList<Product> products;
+    String pStock;
+
+
 
 
     @Override
@@ -28,9 +37,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        products = new ArrayList<>();
         final EditText p1NameEt = findViewById(R.id.prod_edit);
         final EditText p1ProvEt = findViewById(R.id.prov_edit);
         final EditText p1PriceEt = findViewById(R.id.price_edit);
+        final Switch switchBtn = findViewById(R.id.switch1);
+
+
+
+        switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    pStock="yes";
+
+                }
+                else{
+                    pStock="No";
+
+                }
+            }
+        });
+
 
         imageView1 = findViewById(R.id.result_photo);
 
@@ -51,28 +79,31 @@ public class MainActivity extends AppCompatActivity {
                 String pProv = p1ProvEt.getText().toString();
                 String pPrice = p1PriceEt.getText().toString();
 
-                Product product1 = new Product(pName,pProv,pPrice,bitmapP1);
 
-                ArrayList<Product> products = new ArrayList<>();
+
+
+                Product product1 = new Product(pName,pProv,pPrice,pStock,bitmapP1);
+
+
                 products.add(product1);
 
 
-                Intent intent2 = new Intent(MainActivity.this, Product_stock.class);
-                intent2.putExtra("products", product1);
-
-
-
-
-
-
-
+             //   Intent intent2 = new Intent(MainActivity.this, Product_stock.class);
+             //   intent2.putExtra("products", product1);
 
 
 
                 try {
+
                     FileOutputStream fos = openFileOutput("products",MODE_PRIVATE);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(products);
+
+                    //
+                    for (int i = 0; i < products.size(); i++) {
+                        oos.writeObject(products.get(i));
+
+                    }
+                    //
                     oos.close();
 
                     p1NameEt.setText("");
@@ -87,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                startActivity(intent2);
+               // startActivity(intent2);
 
             }
 
@@ -100,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,Product_stock.class);
                 startActivity(intent);
+
             }
         });
 
@@ -119,5 +151,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
     }
 }
